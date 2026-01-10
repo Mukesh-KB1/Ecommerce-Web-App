@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter,createRoutesFromElements, Route, RouterProvider} from 'react-router';
 import {Home,About,Cart,Collection,Contact,Login,Orders,Product,PlaceOrder} from "./pages/index.js"
+import ShopContextProvider from './context/ShopContext.jsx';
 
 
 const router = createBrowserRouter(
@@ -23,7 +24,9 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+  <ShopContextProvider>
+    <RouterProvider router={router} />
+  </ShopContextProvider>
 )
 
 
