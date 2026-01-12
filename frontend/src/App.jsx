@@ -1,16 +1,22 @@
-import {Outlet} from 'react-router'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-
+import { Outlet, useLocation } from 'react-router';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import SearchBar from './components/SearchBar';
 
 function App() {
+  const location = useLocation();
+
+  // Check if we're on homepage
+  const isHomePage = location.pathname === '/';
+
   return (
-    <div className="px-4 sm:px-12 md:px-16 lg:px-20">
+    <div className={isHomePage ? "px-6 sm:px-16 md:px-20 lg:px-24 xl:px-32" : "px-4 sm:px-10 md:px-14 lg:px-20 xl:px-24"}>
       <Navbar />
+      <SearchBar />
       <Outlet />
       <Footer />
     </div>
   )
 }
 
-export default App
+export default App;

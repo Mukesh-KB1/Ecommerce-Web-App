@@ -1,15 +1,32 @@
 import React, { useState } from 'react'
 import { assets } from "../assets/assets"
 import { Link, NavLink } from 'react-router'
+import { UseShopContext } from '../context/ShopContext';
+import { useNavigate,useLocation } from 'react-router';
 
 function Navbar() {
 
     const [visible, setVisible] = useState(false);
+    const {setShowSearch} = UseShopContext();
+
+     const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleSearchClick = () => {
+        // if already on collection → just open search
+        if (location.pathname === '/collection') {
+            setShowSearch(true);
+        } else {
+            // otherwise redirect + open search
+            navigate('/collection');
+            setShowSearch(true);
+        }
+    };
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
 
-            <Link to="/"><img src={assets.logo} alt="Page Logo" className='h-12 w-36' /></Link>
+            <Link to="/"><img src={assets.logo} alt="Page Logo" className='h-10 w-36' /></Link>
 
             <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
 
@@ -38,7 +55,7 @@ function Navbar() {
 
             <div className='flex items-center gap-6'>
 
-                <img src={assets.search_icon} alt="Search Icon" className='w-5 cursor-pointer' />
+                <img onClick={handleSearchClick} src={assets.search_icon} alt="Search Icon" className='w-5 cursor-pointer' />
 
                 <div className='group relative'>
                     <img className='w-5 cursor-pointer' src={assets.profile_icon} alt="Profile-Icon" />

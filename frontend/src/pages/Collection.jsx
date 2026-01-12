@@ -13,6 +13,9 @@ function Collection() {
   const [subCategory,setSubCategory] = useState([]);
   const [sortType,setSortType] = useState('relavent');
 
+  // For the serachFilter
+  const {search,showSearch} = UseShopContext();
+
   const toggleCategory = (e)=>{
     if(category.includes(e.target.value)){
       setCategory(prev => prev.filter(item => item !== e.target.value));
@@ -33,6 +36,10 @@ function Collection() {
 
   const applyFilter = ()=>{
     let productsCopy = products.slice();
+
+    if(showSearch && search){
+      productsCopy = productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+    }
 
     if(category.length > 0){
       productsCopy = productsCopy.filter(item => category.includes(item.category));
@@ -69,7 +76,7 @@ function Collection() {
 
   useEffect(()=>{
     applyFilter();
-  },[category,subCategory])
+  },[category,subCategory,search,showSearch])
 
   // useEffect(()=>{
   //   console.log(category);
