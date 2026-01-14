@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { assets } from "../assets/assets"
 import { Link, NavLink } from 'react-router'
-import { UseShopContext } from '../context/ShopContext';
+import { UseShopContext} from '../context/ShopContext';
 import { useNavigate,useLocation } from 'react-router';
 
 function Navbar() {
 
     const [visible, setVisible] = useState(false);
-    const {setShowSearch} = UseShopContext();
+    const {setShowSearch, getCartCount} = UseShopContext();
 
      const navigate = useNavigate();
     const location = useLocation();
@@ -70,7 +70,7 @@ function Navbar() {
 
                 <Link to='/cart' className='relative'>
                     <img src={assets.cart_icon} alt="Cart_Icon" className='w-5 min-w-5' />
-                    <p className='absolute -right-1.25 -bottom-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>10</p>
+                    <p className='absolute -right-1.25 -bottom-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p>
                 </Link>
 
                 <img onClick={() => setVisible(true)} src={assets.menu_icon} alt="Menu_Icon" className='w-5 cursor-pointer sm:hidden' />
