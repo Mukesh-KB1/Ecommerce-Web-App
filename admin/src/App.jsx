@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useAuth } from './context/AuthContext'
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
+export const currency = '$'
 
 function App() {
 
@@ -22,8 +23,8 @@ function App() {
           <hr className="h-[0.5px] border-0 bg-gray-200" />
           <div className='flex w-full'>
             <Sidebar />
-            <main className="flex-1 px-16 py-8">
-              <div className="max-w-4xl">
+            <main className="flex-1 px-3 py-1">
+              <div className="flex-1 px-16 py-8">
                 <Outlet />
               </div>
             </main>

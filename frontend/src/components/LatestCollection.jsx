@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { UseShopContext } from '../context/ShopContext'
-import { products } from '../assets/assets';
 import Title from './Title';
 import ProductItem from './ProductItem';
 
@@ -11,8 +10,9 @@ function LatestCollection() {
     const[latestProducts,setLatestProducts] = useState([]);
 
     useEffect(()=>{
-        setLatestProducts(products.slice(0,10));
-    },[])
+        // setLatestProducts(products.slice(0,10));
+        setLatestProducts(products.slice(-10).reverse());
+    },[products])
 
 
     return (

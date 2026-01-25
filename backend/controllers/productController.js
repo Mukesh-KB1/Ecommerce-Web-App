@@ -50,7 +50,7 @@ const addProduct = async (req, res) => {
         res.json({ success: true, message: "product saved in DB" })
     } catch (error) {
         console.log(error);
-        res.json({ success: false, messgage: error.message })
+        res.json({ success: false, message: error.message })
     }
 
 }
@@ -64,7 +64,7 @@ const listProduct = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, messgage: error.message })
+        res.json({ success: false, message: error.message })
     }
 }
 
@@ -72,10 +72,10 @@ const listProduct = async (req, res) => {
 const removeProduct = async (req, res) => {
     try {
         await productModel.findByIdAndDelete(req.body.id)
-        res.json({ success: true, messgage: "product removed" })
+        res.json({ success: true, message: "product removed" })
     } catch (error) {
         console.log(error);
-        res.json({ success: false, messgage: error.message })
+        res.json({ success: false, message: error.message })
     }
 }
 
@@ -87,7 +87,7 @@ const singleProduct = async (req, res) => {
         res.json({success : true,product})
     } catch (error) {
         console.log(error);
-        res.json({ success: false, messgage: error.message })
+        res.json({ success: false, message: error.message })
     }
 }
 

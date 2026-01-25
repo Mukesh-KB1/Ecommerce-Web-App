@@ -14,7 +14,7 @@ function BestSeller() {
         setBestSeller(bestProducts.slice(0,5));
         // console.log(bestSeller);
         
-    },[])
+    },[products])
 
     return (
         <div className='my-10'>
