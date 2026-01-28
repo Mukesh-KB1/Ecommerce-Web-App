@@ -39,6 +39,15 @@ const ShopContextProvider = (props) => {
             cartData[itemId][size] = 1;
         }
         setCartItems(cartData);
+
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/cart/add', { itemId, size }, { headers: { token } })
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message)
+            }
+        }
     }
 
     const getCartCount = () => {
@@ -65,6 +74,15 @@ const ShopContextProvider = (props) => {
         cartData[itemId][size] = quantity;   //Ex- [abbc][M] = 0; delete //3 update in cartItems
 
         setCartItems(cartData);
+
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message)
+            }
+        }
     }
 
     const getCartAmount = () => {
@@ -107,9 +125,29 @@ const ShopContextProvider = (props) => {
         }
     }
 
+    const getuserCart = async (token) => {
+        try {
+            const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } });
+            if (response.data.success) {
+                setCartItems(response.data.cartData)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
     useEffect(() => {
         getProductData()
     }, [])
+
+    useEffect(() => {
+        if (token) {
+            getuserCart(token);      // load cart from DB
+        } else {
+            setCartItems({});        // clear cart on logout
+        }
+    }, [token]);
 
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
@@ -120,8 +158,8 @@ const ShopContextProvider = (props) => {
         }
 
         // if (savedToken && savedUserId) {
-            // setToken(savedToken);
-            // setUserId(savedUserId);
+        // setToken(savedToken);
+        // setUserId(savedUserId);
         // }
     }, []);
 

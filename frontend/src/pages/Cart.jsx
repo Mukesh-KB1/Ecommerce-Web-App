@@ -14,24 +14,28 @@ function Cart() {
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-    const temp = [];
 
-    for (const items in cartItems) {   //here Items is id 
-      for (const item in cartItems[items]) {  //here item is size 
-        if (cartItems[items][item] > 0) {
-          temp.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item]
-          })
+    if (products.length > 0) {  //cartItems is gonna built only after products are loaded so it should wait for products to load or else throw error in
+
+      const temp = [];
+
+      for (const items in cartItems) {   //here Items is id 
+        for (const item in cartItems[items]) {  //here item is size 
+          if (cartItems[items][item] > 0) {
+            temp.push({
+              _id: items,
+              size: item,
+              quantity: cartItems[items][item]
+            })
+          }
         }
       }
+
+      // console.log(temp);
+      setCartData(temp);
     }
 
-    // console.log(temp);
-    setCartData(temp);
-
-  }, [cartItems]);
+  }, [cartItems, products]);
 
   return (
     <div className='border-t pt-14'>
