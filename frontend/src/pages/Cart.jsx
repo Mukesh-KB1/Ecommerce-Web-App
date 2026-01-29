@@ -10,7 +10,7 @@ function Cart() {
 
   const navigateTo = useNavigate();
 
-  const { products, cartItems, currency, updateQuantity, navigate } = UseShopContext();
+  const { products, cartItems, currency, updateQuantity } = UseShopContext();
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
@@ -72,14 +72,22 @@ function Cart() {
             )
           })
         }
-        <div className='flex justify-end my-20'>
-          <div className='w-full sm:w-112.5'>
-            <CartTotal />
-            <div className='w-full text-end'>
-              <button onClick={() => navigateTo('/place-orders')} className='bg-black text-white text-sm my-8 px-8 py-3'>PROCEED TO CHECKOUT</button>
+        {cartData.length > 0 && (
+          <div className='flex justify-end my-20'>
+            <div className='w-full sm:w-112.5'>
+              <CartTotal />
+              <div className='w-full text-end'>
+                <button
+                  onClick={() => navigateTo('/place-orders')}
+                  className='bg-black text-white text-sm my-8 px-8 py-3'
+                >
+                  PROCEED TO CHECKOUT
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
       </div>
     </div>
   )
