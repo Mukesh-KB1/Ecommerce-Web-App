@@ -43,7 +43,15 @@ const placeOrderRazorpay = async (req, res) => {
 
 // All Orders data for Admin Panel
 const allOrders = async (req, res) => {
-    
+    try {
+        
+        const orders = await orderModel.find({});
+        res.json({success : true, orders})
+
+    } catch (error) {
+        console.log(error);
+        res.json({success : false, message : error.message})
+    }
 }
 
 // User Orders data for Frontend
@@ -63,7 +71,11 @@ const userOrders = async (req, res) => {
 
 //Update Order status form Admin panel
 const updateStatus = async (req, res) => {
-    
+    try {
+        
+    } catch (error) {
+        
+    }
 }
 
 
