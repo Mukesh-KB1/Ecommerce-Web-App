@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter,createRoutesFromElements, Route, RouterProvider} from 'react-router';
-import {Home,About,Cart,Collection,Contact,Login,Orders,Product,PlaceOrder} from "./pages/index.js"
+import {Home,About,Cart,Collection,Contact,Login,Orders,Product,PlaceOrder,Verify} from "./pages/index.js"
 import ShopContextProvider from './context/ShopContext.jsx';
 
 
@@ -19,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="orders" element={<Orders />} />
       <Route path="product/:productId" element={<Product />} />
       <Route path="place-orders" element={<PlaceOrder />} />
+      <Route path="verify" element={<Verify />} />
     </Route>
   )
 )

@@ -7,6 +7,7 @@ import Login from './Login.jsx'
 import Orders from './Orders.jsx'
 import PlaceOrder from './PlaceOrder.jsx'
 import Product from './Product.jsx'
+import Verify from './Verify.jsx'
 
 
-export {Home,About,Cart,Collection,Contact,Login,Orders,PlaceOrder,Product};
+export {Home,About,Cart,Collection,Contact,Login,Orders,PlaceOrder,Product,Verify};

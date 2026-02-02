@@ -9,15 +9,15 @@ import { toast } from 'react-toastify'
 
 function PlaceOrder() {
 
-  const[method,setMethod] = useState('cod');
+  const [method, setMethod] = useState('cod');
   const navigate = useNavigate();
-  const {backendUrl, token, cartItems, setCartItems, getCartAmount , delivery_fee, products} = UseShopContext();
+  const { backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = UseShopContext();
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    street : '',
+    street: '',
     city: '',
     state: '',
     zipcode: '',
@@ -25,28 +25,28 @@ function PlaceOrder() {
     phone: ''
   })
 
-  const onChangeHandler = (event)=>{
+  const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
 
-    setFormData(prevData => ({...prevData, [name]: value}));
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   }
 
-  const onSubmitHandler = async (e)=>{
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     try {
-      
+
       const orderItems = []
 
-      for(const items in cartItems){
-        for(const size in cartItems[items]){
+      for (const items in cartItems) {
+        for (const size in cartItems[items]) {
 
-          if(cartItems[items][size] > 0){
+          if (cartItems[items][size] > 0) {
 
             const itemInfo = structuredClone(products.find(product => product._id === items)); //copy of this product is going to be stored in itemInfo
 
-            if(itemInfo){
+            if (itemInfo) {
 
               itemInfo.size = size;
               itemInfo.quantity = cartItems[items][size];
@@ -55,38 +55,55 @@ function PlaceOrder() {
             }
 
           }
-      }
-    }
-
-    // console.log(orderItems);
-    const orderData = {
-      items : orderItems,
-      address : formData,
-      amount : getCartAmount() + delivery_fee
-    }
-
-    switch(method){
-
-      //API calls for COD
-      case 'cod':
-
-      const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: {token}})
-      console.log(response.data);
-      
-      if(response.data.success){
-        setCartItems({});
-        navigate('/orders');
-      }
-      else{
-        toast.error(response.data.message);
+        }
       }
 
-      break;
+      // console.log(orderItems);
+      const orderData = {
+        items: orderItems,
+        address: formData,
+        amount: getCartAmount() + delivery_fee
+      }
 
-      default:
-        break;
-    }
-    
+      switch (method) {
+
+        //API calls for COD
+        case 'cod':
+
+          const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: { token } })
+          console.log(response.data);
+
+          if (response.data.success) {
+            setCartItems({});
+            navigate('/orders');
+          }
+          else {
+            toast.error(response.data.message);
+          }
+
+          break;
+
+
+        case 'stripe':
+
+          const response_stripe = await axios.post(backendUrl + '/api/order/stripe', orderData, { headers: { token } })
+
+          if (response_stripe.data.success) {
+
+            const { session_url } = response_stripe.data;
+            window.location.replace(session_url);
+
+          }
+          else{
+            toast.error(response_stripe.data.message);
+          }
+
+          break;
+
+        default:
+          break;
+      }
+
 
     } catch (error) {
       console.log(error);
@@ -103,20 +120,20 @@ function PlaceOrder() {
           <Title text1={'DELIVERY'} text2={'INFORMATION'} />
         </div>
         <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='firstName' value={formData.firstName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='First name'/>
-          <input required onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Last name'/>
+          <input required onChange={onChangeHandler} name='firstName' value={formData.firstName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='First name' />
+          <input required onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Last name' />
         </div>
-        <input required onChange={onChangeHandler} name='email' value={formData.email} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="email" placeholder='Email address'/>
-        <input required onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Street'/>
+        <input required onChange={onChangeHandler} name='email' value={formData.email} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="email" placeholder='Email address' />
+        <input required onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Street' />
         <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='city' value={formData.city} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='City'/>
-          <input required onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='State'/>
+          <input required onChange={onChangeHandler} name='city' value={formData.city} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='City' />
+          <input required onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='State' />
         </div>
         <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Zipcode'/>
-          <input required onChange={onChangeHandler} name='country' value={formData.country} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Country'/>
+          <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Zipcode' />
+          <input required onChange={onChangeHandler} name='country' value={formData.country} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Country' />
         </div>
-        <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Phone'/>
+        <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Phone' />
       </div>
 
       {/* -------------- Right Side -------------- */}
@@ -129,21 +146,21 @@ function PlaceOrder() {
         <div className='mt-12'>
           <Title text1={'PAYMENT'} text2={'METHOD'} />
 
-      {/* -------------- Payment Method Selection -------------- */}
+          {/* -------------- Payment Method Selection -------------- */}
 
           <div className='flex gap-3 flex-col lg:flex-row'>
 
-            <div onClick={()=>setMethod('stripe')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('stripe')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border border-gray-400/70 rounded-full ${method === 'stripe' ? 'bg-green-400' : ''}`}></p>
               <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
             </div>
 
-            <div onClick={()=>setMethod('razorpay')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border border-gray-400/70 rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
               <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
             </div>
 
-            <div onClick={()=>setMethod('cod')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border border-gray-300/60 p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border border-gray-400/70 rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
               <p className='text-gray-500 text-sm font-medium mx-4'>CASH ON DELIVERY</p>
             </div>
