@@ -35,7 +35,7 @@ const placeOrder = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({success: false, message: "Error while placing order"})
+        res.json({success: false, message: "Please logged in to place order"})
     }
 }
 
@@ -94,7 +94,7 @@ const placeOrderStripe = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({success: false, message: "Error while placing order with Stripe"})
+        res.json({success: false, message: "Please logged in to place order"})
     }
 }
 
