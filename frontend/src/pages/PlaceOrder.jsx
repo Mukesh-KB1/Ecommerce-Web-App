@@ -74,6 +74,7 @@ function PlaceOrder() {
           console.log(response.data);
 
           if (response.data.success) {
+            toast.success(response.data.message);
             setCartItems({});
             navigate('/orders');
           }
