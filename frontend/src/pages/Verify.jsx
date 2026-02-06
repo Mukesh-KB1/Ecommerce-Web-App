@@ -26,11 +26,12 @@ function Verify() {
             const response = await axios.post(backendUrl + '/api/order/verifyStripe',{ orderId,success},{headers : { token }});
 
             if(response.data.success){
-
+                toast.success(response.data.message || 'Order Placed successfully 🎉')
                 setCartItems({});
                 navigate('/orders')
             }
             else{
+                toast.error(response.data.message || 'Payment failed ❌')
                 navigate('/cart')
             }
 

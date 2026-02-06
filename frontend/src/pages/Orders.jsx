@@ -7,26 +7,27 @@ import { toast } from 'react-toastify';
 
 function Orders() {
 
-  const { backendUrl, token , currency } = UseShopContext();
+  const { backendUrl, token, currency } = UseShopContext();
 
   const [orderData, setOrderData] = useState([])
 
-  const loadOrderData = async() => {
+  const loadOrderData = async () => {
     try {
 
-      if(!token) {
+      if (!token) {
         return null;
       }
 
       const response = await axios.post(backendUrl + '/api/order/userorders', {}, { headers: { token } })
       // console.log(response.data);
 
-      if(response.data.success){
+      if (response.data.success) {
 
         let allOrders = [];
 
-        response.data.orders.map(order =>{
-          order.items.map(item =>{
+        response.data.orders.map(order => {
+          order.items.map(item => {
+            item['orderId'] = order._id;
             item['status'] = order.status;
             item['payment'] = order.payment;
             item['paymentMethod'] = order.paymentMethod;
@@ -37,17 +38,36 @@ function Orders() {
         // console.log(allOrders);
         setOrderData(allOrders.reverse());
       }
-      
-      
+
+
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   }
 
-  useEffect(()=>{
+  const cancelOrderData = async (orderId) => {
+    try {
+
+      const response = await axios.post(backendUrl + '/api/order/cancelorder', { orderId }, { headers: { token } })
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        loadOrderData();
+      }
+      else{
+        toast.error(response.data.message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
     loadOrderData();
-  },[token])
+  }, [token])
 
   return (
     <div className='border-t pt-16'>
@@ -78,9 +98,27 @@ function Orders() {
                   <p className='min-w-2 h-2 rounded-full bg-green-500'></p>
                   <p className='text-sm md:text-base'>{item.status}</p>
                 </div>
-                <button onClick={loadOrderData} className="border border-black/10 px-4 py-2 text-sm font-medium rounded-md hover:border-black/20 transition">
-                  Track Order
-                </button>
+                <div className='flex items-center gap-2'>
+                  {item.status !== 'Cancelled' ? (
+                    <>
+                      <button
+                        onClick={() => cancelOrderData(item.orderId)}
+                        className="border border-red-400 text-red-500 px-4 py-2 text-sm font-medium rounded-md hover:bg-red-50 transition">
+                          Cancel Order
+                      </button>
+
+                      <button
+                        className="border border-black/10 px-4 py-2 text-sm font-medium rounded-md hover:border-black/20 transition">
+                        Track Order
+                      </button>
+                    </>
+                  ) : (
+                    <span className="text-sm text-gray-500 italic">
+                      Product Cancelled
+                    </span>
+                  )}
+                </div>
+
               </div>
             </div>
           ))
